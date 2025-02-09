@@ -8,9 +8,9 @@
 #include <iostream>
 #include <string>
 
-#include <incbin.h>
 #define INCBIN_STYLE INCBIN_STYLE_SNAKE
 #define INCBIN_PREFIX g_
+#include <incbin.h>
 
 /* Usage: INCBIN(<<LABLE>>, <<FILE>>)
  *
