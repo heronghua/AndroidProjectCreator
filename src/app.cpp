@@ -49,6 +49,38 @@ struct memstream: virtual membuf, std::istream {
     , std::istream(static_cast<std::streambuf*>(this)) { }
 };
 
+#include <fstream>
+#include <sstream>
+#include <string>
+
+void replaceKeyWithValue(std::ifstream& fileStream, const std::string& key, const std::string& value, const std::string& destFilePath) {
+    // Read the contents of the input file into a stringstream
+    std::stringstream contentStream;
+    char buffer[4096];
+    while (fileStream.read(buffer, 4096)) {
+        contentStream << buffer;
+    }
+    if (fileStream.gcount()) {  // If there's still data to read
+        contentStream << buffer;
+    }
+
+    // Replace the key with its corresponding value in the stringstream contents
+    std::string newContent = contentStream.str();
+    size_t pos = newContent.find(key);
+    while (pos != std::string::npos) {
+        newContent.replace(pos, key.length(), value);
+        pos = newContent.find(key, pos + value.length());
+    }
+
+    // Write the updated contents to the destination file
+    std::ofstream destFile(destFilePath);
+    if (!destFile.is_open()) {
+        throw std::runtime_error("Failed to open destination file for writing.");
+    }
+    destFile << newContent;
+}
+
+
 // Read all lines from some input stream
 // and print on stdout.
 void print_lines(std::istream& is)
