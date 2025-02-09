@@ -1,0 +1,3 @@
+/data/data/com.termux/files/home/workspace/AndroidProjectCreator/_build/CMakeFiles/AndroidProjectCreator.dir
+/data/data/com.termux/files/home/workspace/AndroidProjectCreator/_build/CMakeFiles/edit_cache.dir
+/data/data/com.termux/files/home/workspace/AndroidProjectCreator/_build/CMakeFiles/rebuild_cache.dir
