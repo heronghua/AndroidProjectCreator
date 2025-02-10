@@ -17,7 +17,7 @@ endmacro()
 
 Download_Single_Headerlib(
   incbin.h
-  "https://raw.githubusercontent.com/graphitemaster/incbin/8cefe46d5380bf5ae4b4d87832d811f6692aae44/incbin.h"
+  "https://raw.githubusercontent.com/rasky/incbin/refs/heads/patch-1/incbin.h"
   )
 include_directories(${CMAKE_CURRENT_LIST_DIR})
 

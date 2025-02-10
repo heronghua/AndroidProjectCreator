@@ -7,10 +7,14 @@
 
 #include <iostream>
 #include <string>
+#include <fstream>
+#include <sstream>
 
 #define INCBIN_STYLE INCBIN_STYLE_SNAKE
 #define INCBIN_PREFIX g_
 #include <incbin.h>
+
+using namespace std;
 
 /* Usage: INCBIN(<<LABLE>>, <<FILE>>)
  *
@@ -49,11 +53,7 @@ struct memstream: virtual membuf, std::istream {
     , std::istream(static_cast<std::streambuf*>(this)) { }
 };
 
-#include <fstream>
-#include <sstream>
-#include <string>
-
-void replaceKeyWithValue(std::ifstream& fileStream, const std::string& key, const std::string& value, const std::string& destFilePath) {
+void replaceKeyWithValue(std::istream& fileStream, const std::string& key, const std::string& value, const std::string& destFilePath) {
     // Read the contents of the input file into a stringstream
     std::stringstream contentStream;
     char buffer[4096];
@@ -66,6 +66,7 @@ void replaceKeyWithValue(std::ifstream& fileStream, const std::string& key, cons
 
     // Replace the key with its corresponding value in the stringstream contents
     std::string newContent = contentStream.str();
+    cout << newContent << endl;
     size_t pos = newContent.find(key);
     while (pos != std::string::npos) {
         newContent.replace(pos, key.length(), value);
@@ -80,28 +81,14 @@ void replaceKeyWithValue(std::ifstream& fileStream, const std::string& key, cons
     destFile << newContent;
 }
 
-
-// Read all lines from some input stream
-// and print on stdout.
-void print_lines(std::istream& is)
-{
-  std::string line;
-  int  n = 0;
-  while(std::getline(is, line) && n < 25)
-    std::cout << " line[" << n++ << "] = " << line << std::endl;
-}
-
 int main(int argc, char *argv[])
 {
-
-  std::puts("\n [EXPERIMENT 1] =>> Read directly from symbols ---");  
-  std::string text = std::string(g_asset_data, g_asset_data + g_asset_size);
-  std::cout << " Content of the asset file is " << std::endl;
-  std::cout << " => " << text << std::endl;
-
-  std::puts("\n [EXPERIMENT 2] =>> Read from memory stream -------");
   auto is = MEMORY_STREAM(asset);
-  print_lines(is);
+
+  std::string key="At";
+  std::string value="At=";
+  std::string destFilePath="df";
+  replaceKeyWithValue(is,key,value,destFilePath);
 
   return 0;
 }
