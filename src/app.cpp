@@ -9,6 +9,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <filesystem>
 
 #define INCBIN_STYLE INCBIN_STYLE_SNAKE
 #define INCBIN_PREFIX g_
@@ -53,7 +54,7 @@ struct memstream: virtual membuf, std::istream {
     , std::istream(static_cast<std::streambuf*>(this)) { }
 };
 
-void replaceKeyWithValue(std::istream& fileStream, const std::string& key, const std::string& value, const std::string& destFilePath) {
+void replaceKeyWithValue(std::istream& fileStream, const std::string& key, const std::string& value, const std::string& destFilePathStr) {
     // Read the contents of the input file into a stringstream
     std::stringstream contentStream;
     char buffer[4096];
@@ -66,7 +67,6 @@ void replaceKeyWithValue(std::istream& fileStream, const std::string& key, const
 
     // Replace the key with its corresponding value in the stringstream contents
     std::string newContent = contentStream.str();
-    cout << newContent << endl;
     size_t pos = newContent.find(key);
     while (pos != std::string::npos) {
         newContent.replace(pos, key.length(), value);
@@ -74,7 +74,12 @@ void replaceKeyWithValue(std::istream& fileStream, const std::string& key, const
     }
 
     // Write the updated contents to the destination file
-    std::ofstream destFile(destFilePath);
+    filesystem::path destFilePath(destFilePathStr);
+    filesystem::path dir=destFilePath.parent_path();
+    if (!filesystem::exists(dir)) {
+        filesystem::create_directories(dir);    
+    }
+    std::ofstream destFile(destFilePathStr);
     if (!destFile.is_open()) {
         throw std::runtime_error("Failed to open destination file for writing.");
     }
@@ -87,7 +92,7 @@ int main(int argc, char *argv[])
 
   std::string key="At";
   std::string value="At=";
-  std::string destFilePath="df";
+  std::string destFilePath="t/df";
   replaceKeyWithValue(is,key,value,destFilePath);
 
   return 0;
